@@ -7,7 +7,7 @@ pages = Blueprint("pages", __name__)
 def home():
     return render_template("home.html")
 
-@pages.route("/account")
+@pages.route("/<username>")
 @login_required
-def account():
-    return render_template("account.html", user=current_user, email=current_user.email)
+def account(username):
+    return render_template("account.html", user=current_user, email=username)

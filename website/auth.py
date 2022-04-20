@@ -18,7 +18,7 @@ def account():
             if check_password_hash(user.password, password):
                 flash("logged in succesfull", category="info")
                 login_user(user, remember=True)
-                return redirect(url_for("pages.account"))
+                return redirect(url_for("pages.account", username=current_user.username))
             else:
                 flash("incorrect password", category="error")
         else:
@@ -38,6 +38,7 @@ def logout():
 def sign_up():
     if request.method == "POST":
         #get form information
+        username = request.form.get("username")
         email = request.form.get("email")
         password1 = request.form.get("password1")
         password2 = request.form.get("password2")
@@ -53,12 +54,12 @@ def sign_up():
             flash("Passwords don't match", category="error")
         else:
             #sign up
-            newUser = Users(email=email, password=generate_password_hash(password1, method="md5"))
+            newUser = Users(username=username, email=email, password=generate_password_hash(password1, method="md5"))
             db.session.add(newUser)
             db.session.commit()
             login_user(newUser, remember=True)
             flash("signed up and logged in succesfull", category="info")
-            return redirect(url_for("pages.account"))
+            return redirect(url_for("pages.account", username=current_user.username))
 
     return render_template("signup.html", user=current_user)
     
